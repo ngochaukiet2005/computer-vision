@@ -2,66 +2,76 @@ import cv2
 import numpy as np
 
 class ParkingCVPipeline:
-    def __init__(self):
-        # Kỹ thuật 3 (Chương 4): Khởi tạo thuật toán Trừ nền (Background Subtraction MOG2)
-        # Giúp nhận diện các vật thể (xe) di chuyển vào bãi đỗ.
-        self.bg_subtractor = cv2.createBackgroundSubtractorMOG2(history=500, varThreshold=50, detectShadows=False)
-
-    def preprocess(self, frame):
-        """Kỹ thuật 1 (Chương 2): Tiền xử lý ảnh"""
-        # Chuyển sang ảnh xám để giảm khối lượng tính toán
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        # Lọc nhiễu Gaussian để làm mịn ảnh, loại bỏ nhiễu hạt từ camera
-        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-        return blurred
-
-    def get_edges(self, blurred_frame):
-        """Kỹ thuật 2 (Chương 3): Phát hiện đặc trưng"""
-        # Dùng thuật toán Canny để tìm viền của các xe đang đỗ
-        edges = cv2.Canny(blurred_frame, 50, 150)
-        return edges
-
-    def analyze_spot(self, roi_edges, roi_mask):
-        """
-        Phân tích trạng thái Trống/Có xe của 1 ô đỗ cụ thể.
-        Dựa vào mật độ đường viền (edges) và chuyển động (mask).
-        """
-        total_pixels = roi_edges.shape[0] * roi_edges.shape[1]
-        if total_pixels == 0: return "empty"
-
-        # Đếm số lượng điểm ảnh trắng (là viền xe hoặc đối tượng nổi bật)
-        edge_pixels = cv2.countNonZero(roi_edges)
-        edge_density = edge_pixels / total_pixels
+    def __init__(self, model_path='models/svm_parking_model.xml'):
+        # Khởi tạo HOG
+        winSize = (64, 128)
+        blockSize = (16, 16)
+        blockStride = (8, 8)
+        cellSize = (8, 8)
+        nbins = 9
+        self.hog = cv2.HOGDescriptor(winSize, blockSize, blockStride, cellSize, nbins)
         
-        # NGƯỠNG QUYẾT ĐỊNH (Threshold)
-        # Ô đỗ trống (chỉ có nền đường nhựa) sẽ có rất ít viền.
-        # Nếu mật độ viền > 8% (0.08), ta kết luận là Có Xe.
-        # (Số 0.08 này có thể tinh chỉnh nếu video của bạn sáng/tối hơn).
-        if edge_density > 0.08:
+        # Load mô hình SVM
+        try:
+            self.svm = cv2.ml.SVM_load(model_path)
+        except Exception as e:
+            print(f"Chưa tìm thấy mô hình SVM. Vui lòng chạy train_svm.py trước. Lỗi: {e}")
+            self.svm = None
+
+    def auto_detect_parking_spots(self, frame):
+        """
+        Sử dụng Hough Transform và Morphology để tự động tìm ô đỗ xe
+        """
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        
+        # 1. Cân bằng sáng CLAHE (Tăng cường độ tương phản vạch kẻ)
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+        enhanced = clahe.apply(gray)
+        
+        # 2. Canny Edge Detection
+        edges = cv2.Canny(enhanced, 50, 150)
+        
+        # 3. Morphological Closing: Nối các đoạn đứt gãy của vạch kẻ
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+        closed_edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, kernel)
+        
+        # 4. Biến đổi Hough để tìm đoạn thẳng
+        lines = cv2.HoughLinesP(closed_edges, 1, np.pi/180, threshold=40, minLineLength=30, maxLineGap=15)
+        
+        parking_boxes = []
+        if lines is not None:
+            # Xử lý gom nhóm các đoạn thẳng song song thành hình chữ nhật (Bounding box)
+            # Dưới đây là logic giả lập cấu trúc trả về. 
+            # Bạn có thể áp dụng thuật toán gom cụm (K-means) trên tọa độ đường thẳng để lấy ra các ô chính xác.
+            for line in lines:
+                x1, y1, x2, y2 = line[0]
+                # Thêm logic toán học để ghép các đường thẳng thành bộ [x, y, w, h] ở đây
+                pass 
+                
+        # Tạm thời trả về mảng rỗng nếu chưa hoàn thiện logic ghép cạnh
+        return parking_boxes
+
+    def analyze_spot(self, roi_color_image):
+        """
+        Đánh giá trạng thái ô đỗ bằng HOG + SVM
+        """
+        if self.svm is None:
+            return "unknown"
+            
+        # 1. Resize về chuẩn HOG (64x128)
+        resized_roi = cv2.resize(roi_color_image, (64, 128))
+        
+        # 2. Trích xuất vector HOG
+        hog_features = self.hog.compute(resized_roi)
+        
+        # Reshape vector để phù hợp với input của SVM
+        hog_features = np.array([hog_features], dtype=np.float32)
+        
+        # 3. Dự đoán trạng thái
+        _, result = self.svm.predict(hog_features)
+        
+        # 1.0 là Có xe, 0.0 là Trống (Dựa theo cách bạn gán nhãn ở script train)
+        if int(result[0][0]) == 1:
             return "occupied"
         else:
             return "empty"
-
-    def process_frame(self, frame, parking_spots):
-        """Hàm chính chạy qua 3 kỹ thuật cho frame hiện tại"""
-        blurred = self.preprocess(frame)
-        edges = self.get_edges(blurred)
-        
-        # Cập nhật background model (Giúp hệ thống học được nền đường)
-        fg_mask = self.bg_subtractor.apply(blurred)
-
-        results = []
-        for spot in parking_spots:
-            x, y, w, h = spot['box']
-            # Cắt ảnh (ROI) đúng vào vị trí người dùng đã vẽ trên web
-            roi_edges = edges[y:y+h, x:x+w]
-            roi_mask = fg_mask[y:y+h, x:x+w]
-
-            status = self.analyze_spot(roi_edges, roi_mask)
-            results.append({
-                "id": spot['id'],
-                "status": status,
-                "box": spot['box']
-            })
-            
-        return results

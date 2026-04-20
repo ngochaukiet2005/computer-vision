@@ -1,0 +1,14 @@
+# 1. Bỏ qua các định dạng video
+*.mp4
+*.avi
+*.mov
+
+# 2. Bỏ qua toàn bộ thư mục chứa hình ảnh dataset
+backend/data/
+
+# 3. Bỏ qua file mô hình AI (file .xml thường khá nặng)
+backend/models/*.xml
+
+# 4. Bỏ qua các file rác sinh ra trong quá trình chạy code Python
+__pycache__/
+*.pyc
