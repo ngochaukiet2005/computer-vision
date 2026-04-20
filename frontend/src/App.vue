@@ -231,6 +231,9 @@ const connectWebSocket = () => {
     if (data.status === 'success') {
       // Chỉ cập nhật trạng thái Đỏ/Xanh của các ô
       parkingState.value = data.parking_state; 
+      if (data.closest_empty_spot) {
+        closestSpot.value = data.closest_empty_spot;
+      }
     }
   };
 

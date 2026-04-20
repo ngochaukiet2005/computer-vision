@@ -49,7 +49,8 @@ async def websocket_endpoint(websocket: WebSocket):
             data = await websocket.receive_text()
             event = json.loads(data)
             
-            if event.get("action") == "car_enter":
+            action = event.get("action")
+            if action in ["car_enter", "sync_frame"]:
                 if video_cap is None or not video_cap.isOpened():
                     await websocket.send_json({"status": "error", "message": "Chưa có video camera!"})
                     continue
@@ -63,18 +64,21 @@ async def websocket_endpoint(websocket: WebSocket):
                 # ĐƯA FRAME VÀO PIPELINE XỬ LÝ ẢNH
                 updated_spots = cv_pipeline.process_frame(frame, current_spots)
                 
-                # Logic: Tìm ô trống gần nhất (Ở đây lấy ô trống đầu tiên trong danh sách)
-                empty_spot = "BÃI ĐÃ ĐẦY!"
-                for spot in updated_spots:
-                    if spot['status'] == 'empty':
-                        empty_spot = spot['id']
-                        break
-
-                await websocket.send_json({
+                response = {
                     "status": "success",
-                    "closest_empty_spot": empty_spot,
                     "parking_state": updated_spots
-                })
+                }
+
+                # Nếu là sự kiện "car_enter", tính toán thêm ô trống gần nhất
+                if action == "car_enter":
+                    empty_spot = "BÃI ĐÃ ĐẦY!"
+                    for spot in updated_spots:
+                        if spot['status'] == 'empty':
+                            empty_spot = spot['id']
+                            break
+                    response["closest_empty_spot"] = empty_spot
+
+                await websocket.send_json(response)
                 
     except WebSocketDisconnect:
         pass

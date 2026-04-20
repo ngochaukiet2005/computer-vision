@@ -2,14 +2,8 @@ import cv2
 import numpy as np
 import os
 import glob
-
-def get_hog_descriptor():
-    winSize = (64, 128)
-    blockSize = (16, 16)
-    blockStride = (8, 8)
-    cellSize = (8, 8)
-    nbins = 9
-    return cv2.HOGDescriptor(winSize, blockSize, blockStride, cellSize, nbins)
+from preprocessing import apply_preprocessing
+from feature_extraction import get_hog_descriptor
 
 def extract_features(image_paths, label, hog):
     features = []
@@ -20,9 +14,11 @@ def extract_features(image_paths, label, hog):
         img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
         
         if img is not None:
-            # Tiền xử lý: Resize về đúng kích thước winSize
-            img = cv2.resize(img, (64, 128))
-            hist = hog.compute(img)
+            # 1. Tiền xử lý: Resize, Grayscale, CLAHE, Gaussian Blur
+            preprocessed_img = apply_preprocessing(img)
+            
+            # 2. Trích xuất HOG từ ảnh đã tiền xử lý
+            hist = hog.compute(preprocessed_img)
             features.append(hist)
             labels.append(label)
         else:
@@ -33,8 +29,8 @@ def train_and_save_svm():
     hog = get_hog_descriptor()
     
     # 1. Tự động lấy vị trí chính xác
-    current_dir = os.path.dirname(os.path.abspath(__file__)) # Vị trí file train_svm.py (thư mục core_cv)
-    backend_dir = os.path.dirname(current_dir) # Lùi ra 1 cấp để vào thư mục backend
+    current_dir = os.path.dirname(os.path.abspath(__file__)) 
+    backend_dir = os.path.dirname(current_dir) 
     
     # 2. Xây dựng đường dẫn tuyệt đối đến thư mục data
     occ_pattern = os.path.join(backend_dir, 'data', 'train', 'occupied', '*.jpg')
@@ -56,7 +52,7 @@ def train_and_save_svm():
         return
 
     # Trích xuất đặc trưng
-    print("⏳ Đang trích xuất đặc trưng HOG từ ảnh...")
+    print("⏳ Đang tiền xử lý và trích xuất đặc trưng HOG từ ảnh...")
     features_occ, labels_occ = extract_features(occupied_paths, 1, hog)
     features_emp, labels_emp = extract_features(empty_paths, 0, hog)
     
@@ -72,8 +68,9 @@ def train_and_save_svm():
     svm = cv2.ml.SVM_create()
     svm.setKernel(cv2.ml.SVM_LINEAR)
     svm.setType(cv2.ml.SVM_C_SVC)
-    svm.setC(2.67)
-    svm.setGamma(5.383)
+    
+    # Lưu ý: C và Gamma có thể tinh chỉnh sau, Gamma không có tác dụng với LINEAR kernel
+    svm.setC(2.67) 
     
     print("🧠 Đang huấn luyện mô hình SVM...")
     svm.train(X, cv2.ml.ROW_SAMPLE, y)
