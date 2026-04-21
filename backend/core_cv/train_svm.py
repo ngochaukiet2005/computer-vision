@@ -14,12 +14,25 @@ def extract_features(image_paths, label, hog):
         img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
         
         if img is not None:
-            # 1. Tiền xử lý: Resize, Grayscale, CLAHE, Gaussian Blur
+            # 1. Ảnh gốc
             preprocessed_img = apply_preprocessing(img)
-            
-            # 2. Trích xuất HOG từ ảnh đã tiền xử lý
             hist = hog.compute(preprocessed_img)
             features.append(hist)
+            labels.append(label)
+            
+            # 2. Data Augmentation: Lật ngang (Horizontal Flip)
+            flipped = cv2.flip(img, 1)
+            features.append(hog.compute(apply_preprocessing(flipped)))
+            labels.append(label)
+            
+            # 3. Data Augmentation: Tối đi (Darken)
+            darker = cv2.convertScaleAbs(img, alpha=0.8, beta=-15)
+            features.append(hog.compute(apply_preprocessing(darker)))
+            labels.append(label)
+            
+            # 4. Data Augmentation: Sáng lên (Brighten)
+            brighter = cv2.convertScaleAbs(img, alpha=1.2, beta=15)
+            features.append(hog.compute(apply_preprocessing(brighter)))
             labels.append(label)
         else:
             print(f"⚠️ Cảnh báo: Không thể đọc được ảnh {path}")
@@ -69,11 +82,13 @@ def train_and_save_svm():
     svm.setKernel(cv2.ml.SVM_LINEAR)
     svm.setType(cv2.ml.SVM_C_SVC)
     
-    # Lưu ý: C và Gamma có thể tinh chỉnh sau, Gamma không có tác dụng với LINEAR kernel
-    svm.setC(2.67) 
+    print("🧠 Đang huấn luyện mô hình SVM (AutoTune siêu tham số K-Fold)...")
+    # Tự động tìm tham số C tối ưu
+    svm.trainAuto(X, cv2.ml.ROW_SAMPLE, y)
     
-    print("🧠 Đang huấn luyện mô hình SVM...")
-    svm.train(X, cv2.ml.ROW_SAMPLE, y)
+    # In ra tham số C tốt nhất vừa tìm được
+    best_c = svm.getC()
+    print(f"🔥 Tham số C tối ưu tìm được: {best_c}")
     
     # Lưu mô hình
     models_dir = os.path.join(backend_dir, 'models')

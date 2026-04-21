@@ -11,11 +11,11 @@
     <!-- Header -->
     <header class="app-header glass-panel">
       <div class="header-content">
-        <h1>Nền Tảng Quản Lý Đỗ Xe Thông Minh 🚙</h1>
-        <p class="subtitle">Đa Phân Khu - Tự động Luân chuyển (Mock Mode)</p>
+        <h1>Quản Lý Đỗ Xe Thông Minh</h1>
+        <p class="subtitle">Đa Phân Khu - Tự động Luân chuyển</p>
       </div>
       <div class="header-badges">
-        <span class="badge" :class="sysState">{{ sysState === 'SETUP' ? '⚙️ CHẾ ĐỘ CẤU HÌNH' : '🟢 GIÁM SÁT TRỰC TIẾP' }}</span>
+        <span class="badge" :class="sysState">{{ sysState === 'SETUP' ? 'CHẾ ĐỘ CẤU HÌNH' : '🟢 GIÁM SÁT TRỰC TIẾP' }}</span>
       </div>
     </header>
 
@@ -47,7 +47,7 @@
           <button class="btn-primary full-width" @click="addCamera">+ Thêm Khu Vực Mới</button>
           
           <button v-if="cameras.length > 0 && isAllCamerasReady" @click="startSimulation" class="btn-success full-width pulse-anim">
-            🚀 BẮT ĐẦU GIÁM SÁT
+            BẮT ĐẦU GIÁM SÁT
           </button>
           <p v-else class="text-muted text-center text-sm">Cần thêm ít nhất 1 khu vực và tải video lên tất cả khu vực để bắt đầu.</p>
         </div>
@@ -59,8 +59,8 @@
           <input v-model="activeCam.name" class="cam-name-input" placeholder="Tên khu vực..." />
           
           <div class="editor-tools" v-if="activeCam.videoUrl">
-            <button class="btn-secondary" @click="undoSpot" :disabled="activeCam.spots.length === 0">↩️ Hoàn Tác Ô Cuối</button>
-            <button class="btn-danger" @click="clearSpots" :disabled="activeCam.spots.length === 0">🗑️ Xóa Tất Cả Ô</button>
+            <button class="btn-secondary" @click="undoSpot" :disabled="activeCam.spots.length === 0">Hoàn Tác Ô Cuối</button>
+            <button class="btn-danger" @click="clearSpots" :disabled="activeCam.spots.length === 0">Xóa Tất Cả Ô</button>
             <label class="btn-primary upload-btn">
               Tải Video Khác
               <input type="file" accept="video/mp4" @change="handleVideoUpload" hidden />
@@ -69,16 +69,22 @@
         </div>
 
         <div v-if="!activeCam.videoUrl" class="upload-placeholder">
-          <div class="upload-box">
+          <div 
+            class="upload-box"
+            :class="{ 'drag-over': isDragging }"
+            @dragover.prevent="isDragging = true"
+            @dragleave.prevent="isDragging = false"
+            @drop.prevent="handleVideoDrop"
+          >
             <div class="icon-big">📥</div>
-            <h3>Tải lên Video giả lập cho {{ activeCam.name }}</h3>
+            <h3>Kéo thả video vào đây hoặc tải lên cho {{ activeCam.name }}</h3>
             <p>Khuyên dùng góc quay từ trên cao, định dạng MP4</p>
             <input type="file" accept="video/mp4" @change="handleVideoUpload" class="file-input" />
           </div>
         </div>
 
         <div v-else class="canvas-container">
-          <p class="instruction text-center mb-2">👉 Kéo thả chuột để vẽ ô đỗ xe. Nhấn "Hoàn Tác" để xóa ô vẽ sai.</p>
+          <p class="instruction text-center mb-2">Kéo thả chuột để vẽ ô đỗ xe. Nhấn "Hoàn Tác" để xóa ô vẽ sai.</p>
           <div class="canvas-wrapper" @mousedown="startDrawing" @mousemove="draw" @mouseup="stopDrawing" ref="wrapperRef">
             <video :src="activeCam.videoUrl" controls @loadedmetadata="setupCanvas" ref="videoPlayer"></video>
             <canvas ref="drawCanvas"></canvas>
@@ -100,7 +106,7 @@
       <!-- Bảng điều khiển và Log -->
       <aside class="dashboard-sidebar glass-panel">
         <button class="btn-simulate pulse-anim full-width" @click="simulateCarEnter" :disabled="isFull">
-          {{ isFull ? '🚫 BÃI ĐÃ ĐẦY' : '🚗 CÓ XE VÀO BÃI' }}
+          {{ isFull ? 'BÃI ĐÃ ĐẦY' : 'CÓ XE VÀO BÃI' }}
         </button>
 
         <div class="stats-box mt-4">
@@ -127,7 +133,7 @@
           </ul>
         </div>
         
-        <button class="btn-secondary full-width mt-auto" @click="stopSimulation">⬅️ Quay lại Cấu Hình</button>
+        <button class="btn-secondary full-width mt-auto" @click="stopSimulation">Quay lại Cấu Hình</button>
       </aside>
 
       <!-- Lưới Video Grid -->
@@ -278,6 +284,24 @@ const handleVideoUpload = (event) => {
     activeCam.value.spots = [];
   }
 };
+
+const isDragging = ref(false);
+const handleVideoDrop = (event) => {
+  isDragging.value = false;
+  const files = event.dataTransfer.files;
+  if (files.length > 0 && activeCam.value) {
+    const file = files[0];
+    if (file.type.startsWith('video/') || file.name.endsWith('.mp4')) {
+      activeCam.value.videoFile = file;
+      activeCam.value.videoUrl = URL.createObjectURL(file);
+      activeCam.value.spots = [];
+    } else {
+      showToast("Vui lòng tải lên đúng định dạng Video MP4!", "error");
+    }
+  }
+};
+
+
 
 const setupCanvas = () => {
   if (!videoPlayer.value || !drawCanvas.value || !activeCam.value) return;
@@ -704,7 +728,8 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .empty-state { text-align: center; color: #94a3b8; }
 .icon-big { font-size: 60px; margin-bottom: 15px; opacity: 0.5; }
 .upload-placeholder { display: flex; justify-content: center; align-items: center; flex: 1; }
-.upload-box { text-align: center; border: 2px dashed #475569; padding: 40px; border-radius: 12px; background: rgba(15,23,42,0.4);}
+.upload-box { text-align: center; border: 2px dashed #475569; padding: 40px; border-radius: 12px; background: rgba(15,23,42,0.4); transition: all 0.3s ease; }
+.upload-box.drag-over { border-color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
 
 /* --- CANVAS & VIDEO SETUP --- */
 .canvas-container {

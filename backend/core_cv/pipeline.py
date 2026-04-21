@@ -24,15 +24,15 @@ class ParkingCVPipeline:
     def analyze_spot(self, roi_color):
         """Sử dụng toàn bộ Pipeline (Tiền xử lý -> Phân đoạn -> HOG -> SVM) để dự đoán"""
         
-        # BƯỚC 1: Tiền xử lý (Chương 2) - Grayscale, CLAHE, Gaussian Blur
-        preprocessed_img = apply_preprocessing(roi_color)
-        
-        # BƯỚC 2: Phân đoạn ảnh / Early Exit (Chương 4)
-        # Nhựa đường trống thường có phương sai rất thấp. Ta lọc sớm để tối ưu tốc độ.
-        is_empty, variance = is_flat_background(preprocessed_img, variance_threshold=150)
+        # BƯỚC 1: Phân đoạn ảnh / Early Exit (Chương 4)
+        # Tính phương sai trên ảnh gốc Xám (trước khi cân bằng sáng) để độ chính xác cao hơn
+        gray_for_var = cv2.cvtColor(cv2.resize(roi_color, (64, 128)), cv2.COLOR_BGR2GRAY)
+        is_empty, variance = is_flat_background(gray_for_var, variance_threshold=50) # Giảm ngưỡng xuống 50
         if is_empty:
-            # print(f"Early exit: variance {variance:.2f} < 150 -> empty")
             return "empty"
+
+        # BƯỚC 2: Tiền xử lý (Chương 2) - Grayscale, CLAHE, Gaussian Blur
+        preprocessed_img = apply_preprocessing(roi_color)
 
         # BƯỚC 3 & 4: HOG + SVM (Chương 3 & 5)
         if self.svm is None:
