@@ -1,14 +1,56 @@
+@ -1,14 +1,49 @@
 # 1. Bỏ qua các định dạng video
+# ======================
+# 🐍 Python
+# ======================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Environment variables
+.env
+
+# ======================
+# 📦 AI / Computer Vision
+# ======================
+
+# Video files
 *.mp4
 *.avi
 *.mov
 
 # 2. Bỏ qua toàn bộ thư mục chứa hình ảnh dataset
+# Dataset
 backend/data/
 
 # 3. Bỏ qua file mô hình AI (file .xml thường khá nặng)
+# Model files
 backend/models/*.xml
+backend/models/*.pkl
 
 # 4. Bỏ qua các file rác sinh ra trong quá trình chạy code Python
 __pycache__/
 *.pyc
+# ======================
+# 💻 IDE / Editor
+# ======================
+.vscode/
+.idea/
+
+# ======================
+# 🖥 OS files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# 🌐 Frontend
+# ======================
+node_modules/
+dist/
