@@ -1,0 +1,119 @@
+﻿PDF pages: 3
+=== Page 1 ===
+Xß╗¡l├╜ ß║únh v├á Thß╗ïgi├íc m├íy t├¡nh (121036)
+Tr╞░ß╗¥ng ─ÉH GTVT TP. Hß╗ôCh├¡ Minh
+TR╞»ß╗£NG ─Éß║áI Hß╗îC GIAO TH├öNG Vß║¼N Tß║óI TP. Hß╗ÆCH├ì MINH
+H╞░ß╗¢ng Dß║½n B├ái Tß║¡p Lß╗¢n
+Xß╗¡L├╜ ß║ónh v├á Thß╗ïGi├íc M├íy T├¡nh
+M├ú hß╗ìc phß║ºn: 121036
+|
+Sß╗æt├¡n chß╗ë: 3
+Trß╗ìng sß╗æ: 50% ─æiß╗âm tß╗òng kß║┐t
+Tß╗òng Quan
+B├ái tß║¡p lß╗¢n l├á b├ái thi kß║┐t th├║c hß╗ìc phß║ºn theo nh├│m, y├¬u cß║ºu sinh vi├¬n x├íc ─æß╗ïnh mß╗Öt vß║Ñn
+─æß╗üthß╗▒c tß║┐, thiß║┐t kß║┐v├á triß╗ân khai pipeline xß╗¡l├╜ ß║únh/thß╗ïgi├íc m├íy t├¡nh ─æß╗âgiß║úi quyß║┐t vß║Ñn
+─æß╗ü─æ├│, sau ─æ├│ tr├¼nh b├áy kß║┐t quß║ú. ─Éß╗üt├ái c├│ t├¡nh mß╗ƒ: kh├┤ng c├│ mß╗Öt giß║úi ph├íp duy nhß║Ñt
+─æ├║ng. Sinh vi├¬n ─æ╞░ß╗úc ─æ├ính gi├í dß╗▒a tr├¬n chß║Ñt l╞░ß╗úng lß║¡p luß║¡n v├á lß╗▒a chß╗ìn kß╗╣thuß║¡t, kh├┤ng
+chß╗ëdß╗▒a tr├¬n ─æß╗Öch├¡nh x├íc cß╗ºa hß╗çthß╗æng.
+Phß║ím Vi v├á Lß╗▒a Chß╗ìn ─Éß╗üT├ái
+Sinh vi├¬n c├│ thß╗â─æß╗üxuß║Ñt bß║Ñt kß╗│vß║Ñn ─æß╗üthß╗▒c tß║┐n├áo c├│ thß╗âgiß║úi quyß║┐t c├│ ├╜ ngh─⌐a bß║▒ng
+c├íc kß╗╣thuß║¡t xß╗¡l├╜ ß║únh v├á/hoß║╖c thß╗ïgi├íc m├íy t├¡nh. Vß║Ñn ─æß╗üphß║úi c├│ ─æß╗Öng lß╗▒c r├╡ r├áng, v├á
+dß╗▒├ín kh├┤ng ─æ╞░ß╗úc l├á sß╗▒sao ch├⌐p ─æ╞ín giß║ún cß╗ºa b├ái thß╗▒c h├ánh trong kh├│a hß╗ìc.
+Mß╗Öt chß╗º─æß╗ühß╗úp lß╗çphß║úi thß╗Åa m├ún tß║Ñt cß║úc├íc ─æiß╗üu kiß╗çn sau:
+ΓÇó Giß║úi quyß║┐t mß╗Öt vß║Ñn ─æß╗üthß╗▒c tß║┐cß╗Ñthß╗â, c├│ ─æß╗Öng lß╗▒c ─æ╞░ß╗úc ph├ít biß╗âu r├╡ r├áng.
+ΓÇó ├üp dß╗Ñng ├¡t nhß║Ñt ba kß╗╣thuß║¡t tß╗½ch╞░╞íng tr├¼nh hß╗ìc (xem Mß╗Ñc 3).
+ΓÇó ─É╞░ß╗úc ─æ├ính gi├í tr├¬n dß╗»liß╗çu thß╗▒c tß║┐, kh├┤ng phß║úi dß╗»liß╗çu tß╗òng hß╗úp hay dß╗»liß╗çu mß║½u.
+ΓÇó Khß║úthi trong phß║ím vi thß╗¥i gian c├▓n lß║íi cß╗ºa hß╗ìc kß╗│.
+Y├¬u Cß║ºu Kß╗╣Thuß║¡t
+Dß╗▒├ín phß║úi thß╗âhiß╗çn sß╗▒hiß╗âu biß║┐t ├íp dß╗Ñng ─æß╗æi vß╗¢i ├¡t nhß║Ñt ba trong sß╗æc├íc chß╗º─æß╗üsau:
+Ch╞░╞íng
+Chß╗º─æß╗ü
+V├¡ dß╗Ñkß╗╣thuß║¡t
+Ch. 2
+C├íc thuß║¡t to├ín xß╗¡l├╜ ß║únh
+To├ín tß╗¡─æiß╗âm, lß╗ìc tuyß║┐n t├¡nh, biß║┐n ─æß╗òi
+Fourier/Wavelet, biß║┐n ─æß╗òi h├¼nh hß╗ìc
+Ch. 3
+Ph├ít hiß╗çn ─æß║╖c tr╞░ng v├á ─æß╗æi s├ính ß║únh
+Ph├ít hiß╗çn ─æiß╗âm ─æß║╖c tr╞░ng, ─æß╗æi s├ính m├┤
+tß║ú, ph├ít hiß╗çn cß║ính & ─æ╞░ß╗¥ng thß║│ng
+Ch. 4
+Ph├ón ─æoß║ín ß║únh
+─É╞░ß╗¥ng viß╗ün ─æß╗Öng,
+Mean-Shift,
+ph├ón
+cß╗Ñm, ph├ít hiß╗çn bi├¬n
+Ch. 5
+Nhß║¡n dß║íng ß║únh
+Nhß║¡n dß║íng v├á ph├ón loß║íi ─æß╗æi t╞░ß╗úng
+Vß╗¢i mß╗ùi kß╗╣thuß║¡t ─æ╞░ß╗úc sß╗¡dß╗Ñng, sinh vi├¬n phß║úi giß║úi th├¡ch l├╜ do lß╗▒a chß╗ìn ph├╣ hß╗úp vß╗¢i
+vß║Ñn ─æß╗ücß╗Ñthß╗âcß╗ºa m├¼nh, kh├┤ng chß╗ën├¬u t├¬n kß╗╣thuß║¡t ─æ├ú ├íp dß╗Ñng.
+1
+
+=== Page 2 ===
+Xß╗¡l├╜ ß║únh v├á Thß╗ïgi├íc m├íy t├¡nh (121036)
+Tr╞░ß╗¥ng ─ÉH GTVT TP. Hß╗ôCh├¡ Minh
+Y├¬u Cß║ºu Triß╗ân Khai
+ΓÇó M├ú nguß╗ôn phß║úi ─æ╞░ß╗úc viß║┐t bß║▒ng Python sß╗¡dß╗Ñng c├íc th╞░ viß╗çn CV ti├¬u chuß║⌐n (OpenCV,
+scikit-image, PIL, v.v.).
+ΓÇó Pipeline phß║úi c├│ thß╗âchß║íy lß║íi ─æ╞░ß╗úc: k├¿m theo file README h╞░ß╗¢ng dß║½n c├ái ─æß║╖t v├á chß║íy
+tr├¬n dß╗»liß╗çu mß║½u.
+ΓÇó Tß║Ñt cß║úth├¡ nghiß╗çm phß║úi ─æ╞░ß╗úc thß╗▒c hiß╗çn tr├¬n dß╗»liß╗çu thß╗▒c tß║┐. B├ío c├ío phß║úi m├┤ tß║ú
+c├ích thu thß║¡p hoß║╖c nguß╗ôn gß╗æc bß╗Ödß╗»liß╗çu.
+ΓÇó Nß║┐u sß╗¡dß╗Ñng m├┤ h├¼nh huß║Ñn luyß╗çn sß║╡n, phß║úi giß║úi th├¡ch r├╡ r├áng v├á t├¡ch hß╗úp v├áo pipeline
+CV rß╗Öng h╞ín ΓÇö kh├┤ng ─æ╞░ß╗úc l├á giß║úi ph├íp duy nhß║Ñt.
+ΓÇó M├ú nguß╗ôn phß║úi ─æ╞░ß╗úc nß╗Öp qua file n├⌐n.
+Nh├│m v├á Tr├ích Nhiß╗çm C├í Nh├ón
+ΓÇó Mß╗ùi th├ánh vi├¬n phß║úi phß╗Ñtr├ích mß╗Öt th├ánh phß║ºn ─æ╞░ß╗úc x├íc ─æß╗ïnh r├╡ r├áng, ─æ╞░ß╗úc ghi lß║íi
+trong bß║úng ph├ón c├┤ng trong b├ío c├ío.
+ΓÇó Phiß║┐u ─æ├ính gi├í ─æß╗ông nghiß╗çp sß║╜─æ╞░ß╗úc thu thß║¡p sau khi thuyß║┐t tr├¼nh ─æß╗â─æo l╞░ß╗¥ng mß╗⌐c
+─æß╗Ö─æ├│ng g├│p c├í nh├ón trong nh├│m.
+Sß║ún Phß║⌐m Nß╗Öp v├á Trß╗ìng Sß╗æ─Éiß╗âm
+Sß║ún phß║⌐m
+M├┤ tß║ú
+Trß╗ìng sß╗æ
+Hß║ín nß╗Öp
+Source code
+To├án bß╗Öc├ái ─æß║╖t k├¿m README v├á dß╗»
+liß╗çu mß║½u
+25%
+Tuß║ºn 10
+B├ío c├ío
+6-15 trang (kh├┤ng t├¡nh h├¼nh ß║únh v├á
+bß║úng) theo cß║Ñu tr├║c y├¬u cß║ºu
+25%
+Tuß║ºn 10
+Thuyß║┐t tr├¼nh & Demo
+Demo trß╗▒c tiß║┐p 15 ph├║t k├¿m Q&A
+50%
+Tuß║ºn 9
+Tß╗òng cß╗Öng
+100%
+Cß║Ñu Tr├║c B├ío C├ío
+B├ío c├ío viß║┐t phß║úi theo cß║Ñu tr├║c sau:
+1. ─Éß║╖t vß║Ñn ─æß╗üΓÇö Bß║ín ─æang giß║úi quyß║┐t vß║Ñn ─æß╗üg├¼ v├á tß║íi sao n├│ quan trß╗ìng?
+2. C├┤ng tr├¼nh li├¬n quan ΓÇö ├ìt nhß║Ñt 3 t├ái liß╗çu tham khß║úo b├ái b├ío hoß║╖c hß╗çthß╗æng hiß╗çn
+c├│.
+3. Ph╞░╞íng ph├íp ΓÇö M├┤ tß║úto├án bß╗Öpipeline k├¿m l├╜ giß║úi cho mß╗ùi quyß║┐t ─æß╗ïnh thiß║┐t kß║┐.
+4. Th├¡ nghiß╗çm v├á Kß║┐t quß║úΓÇö Chß╗ësß╗æ─æß╗ïnh l╞░ß╗úng (─æß╗Öch├¡nh x├íc, precision/recall, IoU,
+v.v.) v├á v├¡ dß╗Ñtrß╗▒c quan.
+5. Thß║úo luß║¡n ΓÇö Nhß╗»ng g├¼ hiß╗çu quß║ú? Nhß╗»ng g├¼ thß║Ñt bß║íi? Bß║ín sß║╜cß║úi thiß╗çn g├¼?
+6. Kß║┐t luß║¡n ΓÇö T├│m tß║»t c├íc ─æiß╗âm ch├¡nh yß║┐u.
+7. Phß╗Ñlß╗ÑcΓÇöH├¼nh ß║únh v├á bß║úng
+2
+
+=== Page 3 ===
+Xß╗¡l├╜ ß║únh v├á Thß╗ïgi├íc m├íy t├¡nh (121036)
+Tr╞░ß╗¥ng ─ÉH GTVT TP. Hß╗ôCh├¡ Minh
+8. T├ái liß╗çu tham khß║úo ΓÇö ─Éß╗ïnh dß║íng IEEE hoß║╖c APA, tß╗æi thiß╗âu 5 nguß╗ôn.
+Nhß╗»ng ─Éiß╗üu Cß║ºn Tr├ính
+ΓÇó Tß║úi code GitHub c├┤ng khai vß╗üv├á nß╗Öp vß╗¢i c├íc chß╗ënh sß╗¡a nhß╗Å.
+ΓÇó Chß╗ësß╗¡dß╗Ñng API hß╗ìc s├óu (deep learning) dß║íng hß╗Öp ─æen m├á kh├┤ng c├│ pipeline CV
+nß╗ün tß║úng.
+ΓÇó ─É├ính gi├í kß║┐t quß║úthuß║ºn t├║y bß║▒ng quan s├ít trß╗▒c quan m├á kh├┤ng c├│ chß╗ësß╗æ─æß╗ïnh
+l╞░ß╗úng.
+ΓÇó ─É├│ng g├│p kh├┤ng ─æß╗üu trong nh├│m, chß╗ë1ΓÇô2 th├ánh vi├¬n thß╗▒c hiß╗çn to├án bß╗Öc├┤ng viß╗çc.
+ΓÇó ─Éß║ío v─ân trong b├ío c├ío viß║┐t ΓÇö to├án bß╗Önß╗Öi dung phß║úi l├á nguy├¬n bß║ún.
+Bß║Ñt kß╗│vi phß║ím li├¬m ch├¡nh hß╗ìc thuß║¡t n├áo sß║╜dß║½n ─æß║┐n ─æiß╗âm kh├┤ng (0) cho cß║únh├│m.
+3
+

@@ -787,8 +787,8 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .bg-success { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
 .bg-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; }
 
-.live-canvas-wrapper { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #000; border-radius: 8px; overflow: hidden;}
-.live-video { max-width: 100%; max-height: 100%; object-fit: contain;}
+.live-canvas-wrapper { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #000; border-radius: 8px; overflow: hidden; min-height: 300px; }
+.live-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;}
 .overlay-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
 
 /* SVG SPOTS STYLES */

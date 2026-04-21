@@ -1,0 +1,58 @@
+﻿=== DOCX (SRS) ===
+Tong so doan van: 57
+T├ÇI LIß╗åU ─Éß║╢C Tß║ó Y├èU Cß║ªU (SRS)
+T├¬n dß╗▒ ├ín: Hß╗ç thß╗æng M├┤ phß╗Ång H╞░ß╗¢ng dß║½n ─Éß╗ù xe Th├┤ng minh bß║▒ng Thß╗ï gi├íc M├íy t├¡nh (Smart Parking Guidance Simulation)
+Mß╗Ñc ti├¬u: X├óy dß╗▒ng mß╗Öt pipeline xß╗¡ l├╜ ß║únh v├á thß╗ï gi├íc m├íy t├¡nh ─æß╗â giß║úi quyß║┐t vß║Ñn ─æß╗ü h╞░ß╗¢ng dß║½n xe v├áo vß╗ï tr├¡ ─æß╗ù trß╗æng gß║ºn nhß║Ñt dß╗▒a tr├¬n luß╗ông video camera.
+1. M├ö Tß║ó Tß╗öNG QUAN (OVERALL DESCRIPTION)
+Hß╗ç thß╗æng l├á mß╗Öt ß╗⌐ng dß╗Ñng phß║ºn mß╗üm cho ph├⌐p ng╞░ß╗¥i d├╣ng (gi├ím khß║úo/nh├á ph├ít triß╗ân) giß║ú lß║¡p hoß║ít ─æß╗Öng cß╗ºa mß╗Öt b├úi ─æß╗ù xe th├┤ng minh.
+Ng╞░ß╗¥i d├╣ng c├│ thß╗â thiß║┐t lß║¡p b├úi ─æß╗ù xe bß║▒ng c├ích k├⌐o thß║ú nhiß╗üu luß╗ông video thß╗▒c tß║┐ v├áo hß╗ç thß╗æng, ─æß║íi diß╗çn cho c├íc khu vß╗▒c hoß║╖c tß║ºng kh├íc nhau.
+Khi c├│ mß╗Öt sß╗▒ kiß╗çn "Xe v├áo" (─æ╞░ß╗úc k├¡ch hoß║ít bß║▒ng n├║t bß║Ñm), hß╗ç thß╗æng sß║╜ qu├⌐t theo thß╗¥i gian thß╗▒c qua c├íc luß╗ông video, t├¼m ├┤ ─æß╗ù xe trß╗æng gß║ºn cß╗¡a v├áo nhß║Ñt v├á ─æ╞░a ra chß╗ë dß║½n.
+Dß╗▒ ├ín c├│ thß╗â ─æ╞░ß╗úc cß║Ñu tr├║c th├ánh mß╗Öt ß╗⌐ng dß╗Ñng web (v├¡ dß╗Ñ: Frontend d├╣ng framework hiß╗çn ─æß║íi hß╗ù trß╗ú k├⌐o thß║ú v├á WebSocket, Backend sß╗¡ dß╗Ñng Python vß╗¢i FastAPI/Flask) ─æß╗â xß╗¡ l├╜ logic CV theo thß╗¥i gian thß╗▒c v├á trß║ú kß║┐t quß║ú vß╗ü giao diß╗çn.
+2. Y├èU Cß║ªU CHß╗¿C N─éNG (FUNCTIONAL REQUIREMENTS) FR1 - Quß║ún l├╜ Camera (Video Streams):
+Hß╗ç thß╗æng cho ph├⌐p ng╞░ß╗¥i d├╣ng upload/k├⌐o thß║ú c├íc file video v├áo giao diß╗çn ─æß╗â giß║ú lß║¡p camera trß╗▒c tiß║┐p.
+Hß╗ç thß╗æng hß╗ù trß╗ú chß║íy song song nhiß╗üu video c├╣ng l├║c, ─æß║íi diß╗çn cho nhiß╗üu khu vß╗▒c hoß║╖c nhiß╗üu tß║ºng (VD: Tß║ºng hß║ºm 1, Tß║ºng hß║ºm 2).
+FR2 - Khß╗ƒi tß║ío Kh├┤ng gian ─Éß╗ù xe:
+Tr╞░ß╗¢c khi chß║íy giß║ú lß║¡p, hß╗ç thß╗æng cho ph├⌐p cß║Ñu h├¼nh (c├│ thß╗â l├á vß║╜ bounding box thß╗º c├┤ng tr├¬n frame ─æß║ºu ti├¬n hoß║╖c tß╗▒ ─æß╗Öng nhß║¡n diß╗çn) ─æß╗â ─æ├ính dß║Ñu tß╗ìa ─æß╗Ö c├íc ├┤ ─æß╗ù xe v├á vß╗ï tr├¡ "Cß╗¡a v├áo".
+FR2.1 - Trß╗▒c quan h├│a khu vß╗▒c ─æß╗ù xe (Visualization):
+Hß╗ç thß╗æng phß║úi vß║╜ c├íc khung h├¼nh chß╗» nhß║¡t (bounding boxes) bao quanh tß╗½ng ├┤ ─æß╗ù xe tr├¬n luß╗ông video.
+Trß║íng th├íi m├áu sß║»c: ├ö trß╗æng hiß╗ân thß╗ï khung m├áu Xanh, ├┤ c├│ xe hiß╗ân thß╗ï khung m├áu ─Éß╗Å.
+─Éß╗ïnh danh (Labeling): Mß╗ùi ├┤ ─æß╗ù phß║úi c├│ nh├ún hiß╗ân thß╗ï sß╗æ thß╗⌐ tß╗▒ v├á sß╗æ h├áng (V├¡ dß╗Ñ: A-01, A-02, B-01) ─æß╗â t├ái xß║┐ dß╗à d├áng ─æß╗ïnh vß╗ï.
+FR2.2 - Quß║ún l├╜ ph├ón khu ─æa tß║ºng:
+Hß╗ç thß╗æng cho ph├⌐p hiß╗ân thß╗ï v├á xß╗¡ l├╜ ─æß╗ông thß╗¥i nhiß╗üu luß╗ông video ─æß║íi diß╗çn cho c├íc tß║ºng hoß║╖c ph├ón khu kh├íc nhau.
+Khi c├│ t├¡n hiß╗çu "Xe v├áo", hß╗ç thß╗æng thß╗▒c hiß╗çn thuß║¡t to├ín t├¼m kiß║┐m ├┤ trß╗æng theo thß╗⌐ tß╗▒ ╞░u ti├¬n: Gß║ºn lß╗æi v├áo nhß║Ñt -> Tß║ºng thß║Ñp nhß║Ñt -> Khu vß╗▒c c├▓n trß╗æng.
+FR3 - Giß║ú lß║¡p Sß╗▒ kiß╗çn Thß╗¥i gian thß╗▒c:
+Hß╗ç thß╗æng cung cß║Ñp mß╗Öt n├║t bß║Ñm "Giß║ú lß║¡p Xe v├áo".
+Khi nhß║Ñn n├║t, hß╗ç thß╗æng ngay lß║¡p tß╗⌐c lß║Ñy frame hiß╗çn tß║íi (real-time) tß╗½ c├íc luß╗ông video ─æang chß║íy ─æß╗â tiß║┐n h├ánh qu├⌐t trß║íng th├íi b├úi ─æß╗ù.
+FR4 - Pipeline Nhß║¡n diß╗çn Trß║íng th├íi ├ö ─æß╗ù (Core CV):
+Hß╗ç thß╗æng xß╗¡ l├╜ h├¼nh ß║únh cß║»t ra tß╗½ c├íc ├┤ ─æß╗ù xe ─æß╗â ph├ón loß║íi trß║íng th├íi: "Trß╗æng" (Empty) hoß║╖c "C├│ xe" (Occupied).
+FR5 - Logic ─Éiß╗üu phß╗æi & H╞░ß╗¢ng dß║½n:
+Hß╗ç thß╗æng t├¡nh to├ín khoß║úng c├ích tß╗½ c├íc ├┤ "Trß╗æng" ─æß║┐n "Cß╗¡a v├áo" ─æß╗â t├¼m ra ├┤ gß║ºn nhß║Ñt.
+Nß║┐u video 1 (Tß║ºng 1) ─æ├ú ─æß║ºy, hß╗ç thß╗æng tß╗▒ ─æß╗Öng chuyß╗ân sang qu├⌐t video 2 (Tß║ºng 2) ─æß╗â t├¼m chß╗ù trß╗æng.
+Hß╗ç thß╗æng hiß╗ân thß╗ï luß╗ông video vß╗¢i c├íc ├┤ ─æß╗ù ─æ╞░ß╗úc ─æ├│ng khung m├áu (VD: ─Éß╗Å = ─Éß║ºy, Xanh = Trß╗æng) v├á highlight ├┤ ─æ╞░ß╗úc chß╗ë ─æß╗ïnh cho xe mß╗¢i v├áo.
+3. R├ÇNG BUß╗ÿC Kß╗╕ THUß║¼T V├Ç Hß╗îC THUß║¼T (STRICT CONSTRAINTS)
+─É├óy l├á c├íc y├¬u cß║ºu bß║»t buß╗Öc hß╗ç thß╗æng phß║úi tu├ón thß╗º ─æß╗â ─æ├íp ß╗⌐ng ti├¬u ch├¡ chß║Ñm ─æiß╗âm cß╗ºa hß╗ìc phß║ºn:
+R1 - M├┤i tr╞░ß╗¥ng C├┤ng nghß╗ç: M├ú nguß╗ôn cß╗æt l├╡i xß╗¡ l├╜ CV bß║»t buß╗Öc phß║úi ─æ╞░ß╗úc viß║┐t bß║▒ng Python, sß╗¡ dß╗Ñng c├íc th╞░ viß╗çn CV ti├¬u chuß║⌐n nh╞░ OpenCV, scikit-image, hoß║╖c PIL.
+R2 - T├¡ch hß╗úp Kß╗╣ thuß║¡t Hß╗ìc phß║ºn: Pipeline xß╗¡ l├╜ ß║únh phß║úi ├íp dß╗Ñng v├á c├│ sß╗▒ kß║┐t hß╗úp cß╗ºa ├¡t nhß║Ñt 3 kß╗╣ thuß║¡t ─æ╞░ß╗úc hß╗ìc trong ch╞░╞íng tr├¼nh. (Khuyß║┐n nghß╗ï tham khß║úo Ch╞░╞íng 2: To├ín tß╗¡ ─æiß╗âm/Lß╗ìc tuyß║┐n t├¡nh; Ch╞░╞íng 3: Canny Edge/Biß║┐n ─æß╗òi h├¼nh hß╗ìc; Ch╞░╞íng 4: Ph├ón ─æoß║ín nß╗ün; Ch╞░╞íng 5: Ph├ón loß║íi). Mß╗ùi kß╗╣ thuß║¡t khi d├╣ng phß║úi ─æ╞░ß╗úc giß║úi th├¡ch l├╜ do lß╗▒a chß╗ìn.
+R3 - Y├¬u cß║ºu vß╗ü Dß╗» liß╗çu: Tß║Ñt cß║ú c├íc video d├╣ng ─æß╗â k├⌐o thß║ú v├áo hß╗ç thß╗æng giß║ú lß║¡p phß║úi l├á dß╗» liß╗çu thß╗▒c tß║┐, tuyß╗çt ─æß╗æi kh├┤ng d├╣ng dß╗» liß╗çu tß╗òng hß╗úp (synthetic) hay dß╗» liß╗çu mß║½u ─æ╞ín giß║ún. Phß║úi b├ío c├ío r├╡ c├ích thu thß║¡p hoß║╖c nguß╗ôn gß╗æc cß╗ºa c├íc video n├áy.
+R4 - Giß╗¢i hß║ín Hß╗ìc s├óu (Deep Learning): Kh├┤ng ─æ╞░ß╗úc ph├⌐p chß╗ë sß╗¡ dß╗Ñng mß╗Öt API hß╗ìc s├óu dß║íng "hß╗Öp ─æen" (nh╞░ gß╗ìi thß║│ng mß╗Öt m├┤ h├¼nh YOLO dß╗▒ng sß║╡n) ─æß╗â l├ám mß╗ìi thß╗⌐. Nß║┐u c├│ d├╣ng m├┤ h├¼nh huß║Ñn luyß╗çn sß║╡n, n├│ phß║úi ─æ╞░ß╗úc t├¡ch hß╗úp v├áo mß╗Öt pipeline CV rß╗Öng h╞ín v├á phß║úi ─æ╞░ß╗úc giß║úi th├¡ch r├╡ r├áng.
+R5 - Khß║ú n─âng T├íi lß║¡p (Reproducibility): Hß╗ç thß╗æng phß║úi ─æ├│ng g├│i k├¿m file README.md h╞░ß╗¢ng dß║½n chi tiß║┐t c├ích c├ái ─æß║╖t m├┤i tr╞░ß╗¥ng v├á c├ích chß║íy ß╗⌐ng dß╗Ñng vß╗¢i c├íc video dß╗» liß╗çu mß║½u ─æ├ú cung cß║Ñp.
+R6 - ─É├│ng g├│p nguy├¬n bß║ún: M├ú nguß╗ôn kh├┤ng ─æ╞░ß╗úc tß║úi tß╗½ c├íc dß╗▒ ├ín GitHub c├┤ng khai vß╗ü chß╗ënh sß╗¡a nhß╗Å.
+Ng├┤n ngß╗» lß║¡p tr├¼nh: To├án bß╗Ö hß╗ç thß╗æng phß║úi ─æ╞░ß╗úc ph├ít triß╗ân bß║▒ng Python, sß╗¡ dß╗Ñng c├íc th╞░ viß╗çn nh╞░ OpenCV, scikit-image hoß║╖c PIL ─æß╗â xß╗¡ l├╜ h├¼nh ß║únh.
+Chiß║┐n l╞░ß╗úc sß╗¡ dß╗Ñng Deep Learning/Machine Learning (DL/ML):
+Nguy├¬n tß║»c hß║ín chß║┐: Kh├┤ng sß╗¡ dß╗Ñng DL theo dß║íng "hß╗Öp ─æen" (nh╞░ chß╗ë gß╗ìi API nhß║¡n diß╗çn xe).
+C├ích tiß║┐p cß║¡n hß╗úp lß╗ç: Chß╗ë sß╗¡ dß╗Ñng DL/ML nh╞░ mß╗Öt th├ánh phß║ºn hß╗ù trß╗ú trong mß╗Öt pipeline CV rß╗Öng h╞ín.
+V├¡ dß╗Ñ: Sß╗¡ dß╗Ñng xß╗¡ l├╜ ß║únh truyß╗ün thß╗æng (Ch╞░╞íng 2, 3) ─æß╗â t├ích v├╣ng (ROI) v├á d├╣ng mß╗Öt m├┤ h├¼nh ph├ón loß║íi nhß╗Å (SVM hoß║╖c CNN ─æ╞ín giß║ún) chß╗ë ─æß╗â x├íc nhß║¡n lß║íi trß║íng th├íi trß╗æng/─æß║ºy.
+Y├¬u cß║ºu giß║úi th├¡ch: Vß╗¢i mß╗ùi th├ánh phß║ºn c├│ d├╣ng ML, b├ío c├ío phß║úi giß║úi th├¡ch r├╡ tß║íi sao kß╗╣ thuß║¡t truyß╗ün thß╗æng kh├┤ng tß╗æi ╞░u bß║▒ng v├á c╞í chß║┐ hoß║ít ─æß╗Öng b├¬n trong cß╗ºa m├┤ h├¼nh ─æ├│ l├á g├¼.
+4. PIPELINE Xß╗¼ L├¥ ß║óNH ─Éß╗Ç XUß║ñT (TU├éN THß╗ª 3 Kß╗╕ THUß║¼T)
+─Éß╗â ─æß║úm bß║úo ─æiß╗âm sß╗æ cao vß╗ü t├¡nh lß║¡p luß║¡n, hß╗ç thß╗æng sß║╜ kß║┐t hß╗úp:
+Tiß╗ün xß╗¡ l├╜ (Ch╞░╞íng 2): Lß╗ìc nhiß╗àu Gaussian v├á c├ón bß║▒ng ─æß╗Ö t╞░╞íng phß║ún ─æß╗â xß╗¡ l├╜ ─æiß╗üu kiß╗çn thiß║┐u s├íng trong b├úi xe.
+Ph├ít hiß╗çn ─æß║╖c tr╞░ng (Ch╞░╞íng 3): Sß╗¡ dß╗Ñng thuß║¡t to├ín Canny hoß║╖c Sobel ─æß╗â x├íc ─æß╗ïnh c├íc cß║ính cß╗ºa xe hoß║╖c vß║ích kß║╗ ├┤ ─æß╗ù.
+Ph├ón ─æoß║ín ß║únh (Ch╞░╞íng 4): Sß╗¡ dß╗Ñng trß╗½ nß╗ün (Background Subtraction) hoß║╖c ph├ón t├¡ch Histogram trong tß╗½ng v├╣ng ├┤ ─æß╗ù ─æß╗â quyß║┐t ─æß╗ïnh trß║íng th├íi trß╗æng/─æß║ºy.
+5. Y├èU Cß║ªU PHI CHß╗¿C N─éNG (NON-FUNCTIONAL REQUIREMENTS)
+NFR1 - Hiß╗çu n─âng (Performance): Tß╗æc ─æß╗Ö phß║ún hß╗ôi tß╗½ l├║c bß║Ñm n├║t "Xe v├áo" ─æß║┐n l├║c hß╗ç thß╗æng chß╗ë ─æß╗ïnh ├┤ ─æß╗ù phß║úi ─æß╗º nhanh (─æß╗Ö trß╗à thß║Ñp) ─æß╗â tß║ío cß║úm gi├íc thß╗¥i gian thß╗▒c.
+NFR2 - T├¡nh trß╗▒c quan: Giao diß╗çn UI/UX cß║ºn r├╡ r├áng, viß╗çc highlight c├íc b├úi ─æß╗ù (bounding box) tr├¬n video ─æang chß║íy phß║úi m╞░ß╗út m├á, kh├┤ng g├óy giß║¡t lag luß╗ông video.
+6. Kß║╛ HOß║áCH KIß╗éM THß╗¼ V├Ç ─É├üNH GI├ü (TESTING & EVALUATION)
+Hß╗ç thß╗æng kh├┤ng ─æ╞░ß╗úc ─æ├ính gi├í kß║┐t quß║ú thuß║ºn t├║y bß║▒ng viß╗çc "nh├¼n bß║▒ng mß║»t th╞░ß╗¥ng".
+Qu├í tr├¼nh kiß╗âm thß╗¡ phß║úi ─æo l╞░ß╗¥ng bß║▒ng c├íc chß╗ë sß╗æ ─æß╗ïnh l╞░ß╗úng.
+─É├ính gi├í ─æß╗Ö ch├¡nh x├íc cß╗ºa Pipeline CV: Tß║ío mß╗Öt tß║¡p dß╗» liß╗çu test (ground truth) gß╗ôm c├íc frame ß║únh t─⌐nh tß╗½ b├úi ─æß╗ù xe ─æ├ú ─æ╞░ß╗úc d├ín nh├ún (Trß╗æng/C├│ xe). Chß║íy pipeline qua tß║¡p test v├á ─æo l╞░ß╗¥ng c├íc chß╗ë sß╗æ: ─Éß╗Ö ch├¡nh x├íc (Accuracy), Precision, Recall, hoß║╖c F1-Score.
+Kiß╗âm thß╗¡ t├¡ch hß╗úp: Test kß╗ïch bß║ún hß╗ç thß╗æng tß╗▒ ─æß╗Öng chuyß╗ân ─æß╗òi giß╗»a 2 video giß║ú lß║¡p tß║ºng 1 (─æ├ú ─æß║ºy xe) v├á tß║ºng 2 (c├▓n chß╗ù). Test kß╗ïch bß║ún c├│ yß║┐u tß╗æ nhiß╗àu trong video (xe ng╞░ß╗¥i ─æi bß╗Ö ngang qua camera, ├ính s├íng thay ─æß╗òi).
