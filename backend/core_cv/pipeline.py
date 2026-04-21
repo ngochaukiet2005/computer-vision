@@ -20,17 +20,14 @@ class ParkingCVPipeline:
             print("✅ Đã nạp thành công bộ não AI (SVM Model) vào Pipeline!")
         else:
             print("⚠️ CẢNH BÁO: Chưa tìm thấy file svm_parking_model.xml!")
+            
+        # Biến lưu trữ lịch sử trạng thái (Dùng để chống nhiễu / chớp nháy do camera rung lắc)
+        self.spot_history = {}
+        self.history_size = 5  # Giảm xuống 5 frame (~1 giây) để hệ thống phản hồi cực nhanh thời gian thực
 
     def analyze_spot(self, roi_color):
         """Sử dụng toàn bộ Pipeline (Tiền xử lý -> Phân đoạn -> HOG -> SVM) để dự đoán"""
         
-        # BƯỚC 1: Phân đoạn ảnh / Early Exit (Chương 4)
-        # Tính phương sai trên ảnh gốc Xám (trước khi cân bằng sáng) để độ chính xác cao hơn
-        gray_for_var = cv2.cvtColor(cv2.resize(roi_color, (64, 128)), cv2.COLOR_BGR2GRAY)
-        is_empty, variance = is_flat_background(gray_for_var, variance_threshold=50) # Giảm ngưỡng xuống 50
-        if is_empty:
-            return "empty"
-
         # BƯỚC 2: Tiền xử lý (Chương 2) - Grayscale, CLAHE, Gaussian Blur
         preprocessed_img = apply_preprocessing(roi_color)
 
@@ -51,20 +48,37 @@ class ParkingCVPipeline:
             return "empty"
 
     def process_frame(self, frame, parking_spots):
-        """Hàm chính xử lý toàn bộ các ô đỗ trên frame dựa vào tọa độ từ Vue.js"""
+        """Hàm chính xử lý toàn bộ các ô đỗ trên frame"""
         results = []
         for spot in parking_spots:
+            spot_id = spot['id']
             x, y, w, h = spot['box']
             
-            # Cắt lấy vùng ảnh MÀU chứa ô đỗ xe
+            # Cắt ảnh chính xác theo khung hình người dùng vẽ trên giao diện
+            # Điều này giúp linh hoạt cho mọi video, người dùng vẽ ô to thì cắt to, vẽ nhỏ cắt nhỏ
             roi_color = frame[y:y+h, x:x+w]
 
-            # Phân tích trạng thái
-            status = self.analyze_spot(roi_color)
+            # Phân tích trạng thái bằng AI (SVM)
+            current_pred = self.analyze_spot(roi_color)
+            
+            # Smoothing (Chống chớp nháy): Lấy biểu quyết từ N frame gần nhất
+            if spot_id not in self.spot_history:
+                self.spot_history[spot_id] = [current_pred] * self.history_size
+                
+            self.spot_history[spot_id].pop(0)
+            self.spot_history[spot_id].append(current_pred)
+            
+            occ_count = self.spot_history[spot_id].count("occupied")
+            emp_count = self.spot_history[spot_id].count("empty")
+            
+            # Phản hồi CỰC NHANH (Asymmetric Smoothing)
+            # Thay vì chờ quá bán (3/5), chỉ cần 2 khung hình phát hiện có xe là lập tức bật ĐỎ
+            # Giúp hệ thống đổi màu ngay khi xe vừa tiến vào được một nửa
+            final_status = "occupied" if occ_count >= 2 else "empty"
             
             results.append({
-                "id": spot['id'],
-                "status": status,
+                "id": spot_id,
+                "status": final_status,
                 "box": spot['box']
             })
             

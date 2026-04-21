@@ -352,8 +352,8 @@ const stopDrawing = (e) => {
   const width = endX - startX;
   const height = endY - startY;
 
-  // Nếu khung đủ to, lưu lại
-  if (Math.abs(width) > 20 && Math.abs(height) > 20) {
+  // Nếu khung đủ to, lưu lại (Đã giảm giới hạn từ 20px xuống 5px để vẽ được ô nhỏ)
+  if (Math.abs(width) > 5 && Math.abs(height) > 5) {
     const scaleX_ratio = activeCam.value.vidWidth / videoPlayer.value.clientWidth;
     const scaleY_ratio = activeCam.value.vidHeight / videoPlayer.value.clientHeight;
 

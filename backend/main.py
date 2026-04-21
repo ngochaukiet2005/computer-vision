@@ -48,6 +48,7 @@ async def upload_config_multi(request: Request):
         # Khởi tạo pipeline và OpenCV VideoCapture
         cap = cv2.VideoCapture(video_path)
         camera_system[cam_id] = {
+            "video_path": video_path,
             "video_cap": cap,
             "spots": spots,
             "pipeline": ParkingCVPipeline()
@@ -82,10 +83,24 @@ async def websocket_endpoint(websocket: WebSocket):
                     spots = cam_data["spots"]
                     pipeline = cam_data["pipeline"]
                     
-                    ret, frame = cap.read()
-                    if not ret:
-                        cap.set(cv2.CAP_PROP_POS_FRAMES, 0) # Lặp lại video
+                    # ĐỒNG BỘ HÓA TỐC ĐỘ (DESYNC FIX)
+                    # Video chạy ở Frontend là 25 FPS (1 giây có 25 hình).
+                    # Websocket gọi mỗi 200ms (5 lần/giây). 
+                    # Do đó, mỗi lần gọi, Backend cần phải nhảy qua 5 frame để theo kịp tốc độ của Frontend!
+                    for _ in range(4):
+                        cap.read() # Đọc bỏ qua 4 frame
+                        
+                    ret, frame = cap.read() # Đọc frame thứ 5 để xử lý
+                    
+                    if not ret or frame is None:
+                        # Hết video -> Mở lại từ đầu giống như thẻ <video loop>
+                        cap.release()
+                        cap = cv2.VideoCapture(cam_data["video_path"])
+                        cam_data["video_cap"] = cap
                         ret, frame = cap.read()
+                        
+                        # Reset luôn bộ đệm lịch sử để tránh báo đỏ ảo do quá khứ
+                        pipeline.spot_history.clear()
                         
                     # Phân tích frame qua thuật toán SVM
                     updated_spots = pipeline.process_frame(frame, spots)
