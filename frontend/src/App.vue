@@ -1,5 +1,13 @@
 <template>
   <div class="app-container">
+    <!-- Toast Notification UI -->
+    <transition name="toast-fade">
+      <div v-if="toastMsg" class="toast-notification" :class="toastType">
+        <span class="toast-icon">{{ toastType === 'error' ? '⚠️' : '✅' }}</span>
+        <span>{{ toastMsg }}</span>
+      </div>
+    </transition>
+
     <!-- Header -->
     <header class="app-header glass-panel">
       <div class="header-content">
@@ -197,6 +205,20 @@ const targetSpotId = ref(null);
 let mockInterval = null;
 let autoFillTimeout = null;
 
+// Toast logic
+const toastMsg = ref('');
+const toastType = ref('error');
+let toastTimer = null;
+
+const showToast = (msg, type = 'error') => {
+  toastMsg.value = msg;
+  toastType.value = type;
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toastMsg.value = '';
+  }, 3500);
+};
+
 // Thêm log helper
 const addLog = (msg, type = 'info') => {
   const now = new Date();
@@ -368,75 +390,109 @@ const clearSpots = () => {
   }
 };
 
-// --- CHẾ ĐỘ LIVE / MOCK ---
-const startSimulation = () => {
+const socket = ref(null);
+const isConnecting = ref(false);
+
+const startSimulation = async () => {
   if (totalSpots.value === 0) {
-    alert("Vui lòng vẽ ít nhất 1 ô đỗ xe trước khi bắt đầu!");
+    showToast("LỖI: Vui lòng cấu hình ít nhất 1 ô đỗ xe trước khi bắt đầu!", "error");
     return;
   }
   
-  sysState.value = 'LIVE';
-  logs.value = [];
-  targetSpotId.value = null;
-  addLog("Hệ thống Giám sát Đa Phân Khu đã khởi động.", "success");
-
-  // Reset tất cả về empty
+  isConnecting.value = true;
+  
+  const formData = new FormData();
+  const configMap = {};
+  
   cameras.value.forEach(cam => {
-    cam.spots.forEach(s => s.status = 'empty');
+    formData.append(`video_${cam.id}`, cam.videoFile);
+    configMap[cam.id] = cam.spots.map(s => ({...s, status: 'empty'}));
   });
+  
+  formData.append('config', JSON.stringify(configMap));
 
-  // Mock logic: Thỉnh thoảng có xe ra/vào tự động để demo UI thay đổi xanh/đỏ
-  mockInterval = setInterval(() => {
-    // Không tự đổi ngẫu nhiên nữa để user tự test nút "Có xe vào"
-  }, 3000);
+  try {
+    const res = await fetch("http://localhost:8000/upload-config-multi", {
+      method: "POST",
+      body: formData
+    });
+    
+    if (res.ok) {
+      sysState.value = 'LIVE';
+      logs.value = [];
+      targetSpotId.value = null;
+      addLog("Đã nạp dữ liệu AI. Khởi động luồng xử lý Đa Phân Khu...", "success");
+      
+      connectWebSocket();
+    } else {
+      addLog("LỖI: Không thể tải cấu hình lên Backend!", "error");
+    }
+  } catch (e) {
+    showToast("LỖI KẾT NỐI: Không tìm thấy Backend (main.py). Vui lòng khởi động lại Backend!", "error");
+  } finally {
+    isConnecting.value = false;
+  }
+};
+
+const connectWebSocket = () => {
+  socket.value = new WebSocket('ws://localhost:8000/ws/parking');
+  
+  socket.value.onopen = () => {
+    mockInterval = setInterval(() => {
+      if (socket.value && socket.value.readyState === WebSocket.OPEN) {
+        socket.value.send(JSON.stringify({ action: 'sync_frame' }));
+      }
+    }, 200); 
+  };
+  
+  socket.value.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.status === 'success') {
+      
+      for (const camId in data.parking_state) {
+        const camData = cameras.value.find(c => c.id === camId);
+        if (camData) {
+          camData.spots = data.parking_state[camId];
+        }
+      }
+      
+      if (data.closest_empty_spot) {
+        targetSpotId.value = data.closest_empty_spot;
+        
+        // Tắt nhấp nháy sau 5 giây để trả lại trạng thái thường
+        clearTimeout(autoFillTimeout);
+        autoFillTimeout = setTimeout(() => {
+          targetSpotId.value = null;
+        }, 5000);
+      }
+    }
+  };
+
+  socket.value.onclose = () => {
+    clearInterval(mockInterval);
+  };
 };
 
 const stopSimulation = () => {
   sysState.value = 'SETUP';
   clearInterval(mockInterval);
   clearTimeout(autoFillTimeout);
+  if (socket.value) {
+    socket.value.close();
+  }
 };
 
 const simulateCarEnter = () => {
-  addLog("🚗 Yêu cầu cấp quyền đỗ xe nhận được.", "info");
-  
-  // Logic Luân phiên (Fallback): Quét tuần tự các camera
-  let foundSpot = null;
-  let foundCamName = "";
-
-  for (const cam of cameras.value) {
-    addLog(`Đang quét ${cam.name}...`, "info");
-    
-    const emptySpot = cam.spots.find(s => s.status === 'empty');
-    if (emptySpot) {
-      foundSpot = emptySpot;
-      foundCamName = cam.name;
-      break; // Tìm thấy thì dừng quét
-    } else {
-      addLog(`❌ ${cam.name} đã đầy! Chuyển sang quét khu vực khác...`, "error");
-    }
-  }
-
-  if (foundSpot) {
-    addLog(`✅ Tìm thấy ô trống [${foundSpot.id}] tại ${foundCamName}. Đang chỉ dẫn...`, "success");
-    targetSpotId.value = foundSpot.id;
-    
-    // Giả lập sau 5 giây thì chiếc xe đó chạy tới đỗ vào ô
-    clearTimeout(autoFillTimeout);
-    autoFillTimeout = setTimeout(() => {
-      foundSpot.status = 'occupied';
-      targetSpotId.value = null; // Tắt nhấp nháy
-      addLog(`Xe đã đỗ thành công vào vị trí [${foundSpot.id}].`, "info");
-    }, 5000);
-
-  } else {
-    addLog("🚫 TOÀN BỘ BÃI XE ĐÃ ĐẦY!", "error");
+  addLog("🚗 Yêu cầu đỗ xe gửi lên mô hình AI...", "info");
+  if (socket.value && socket.value.readyState === WebSocket.OPEN) {
+    socket.value.send(JSON.stringify({ action: 'car_enter' }));
   }
 };
 
 onUnmounted(() => {
   clearInterval(mockInterval);
   clearTimeout(autoFillTimeout);
+  if (socket.value) socket.value.close();
 });
 
 // Init 1 camera mặc định
@@ -457,6 +513,28 @@ addCamera();
   flex-direction: column;
 }
 
+/* --- TOAST NOTIFICATION --- */
+.toast-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 9999;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  font-size: 15px;
+}
+.toast-notification.error { background: rgba(239, 68, 68, 0.95); color: white; border: 1px solid #dc2626; backdrop-filter: blur(5px);}
+.toast-notification.success { background: rgba(16, 185, 129, 0.95); color: white; border: 1px solid #059669; backdrop-filter: blur(5px);}
+.toast-fade-enter-active, .toast-fade-leave-active { transition: all 0.3s ease; }
+.toast-fade-enter-from, .toast-fade-leave-to { opacity: 0; transform: translate(-50%, -20px); }
+
+/* --- HEADER --- */
 .glass-panel {
   background: rgba(30, 41, 59, 0.7); /* Slate 800 */
   backdrop-filter: blur(12px);
