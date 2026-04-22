@@ -9,28 +9,23 @@ def extract_features(image_paths, label, hog):
     features = []
     labels = []
     for path in image_paths:
-        # Xử lý trường hợp đường dẫn có tiếng Việt
         img_array = np.fromfile(path, np.uint8)
         img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
         
         if img is not None:
-            # 1. Ảnh gốc
             preprocessed_img = apply_preprocessing(img)
             hist = hog.compute(preprocessed_img)
             features.append(hist)
             labels.append(label)
             
-            # 2. Data Augmentation: Lật ngang (Horizontal Flip)
             flipped = cv2.flip(img, 1)
             features.append(hog.compute(apply_preprocessing(flipped)))
             labels.append(label)
             
-            # 3. Data Augmentation: Tối đi (Darken)
             darker = cv2.convertScaleAbs(img, alpha=0.8, beta=-15)
             features.append(hog.compute(apply_preprocessing(darker)))
             labels.append(label)
             
-            # 4. Data Augmentation: Sáng lên (Brighten)
             brighter = cv2.convertScaleAbs(img, alpha=1.2, beta=15)
             features.append(hog.compute(apply_preprocessing(brighter)))
             labels.append(label)
@@ -40,12 +35,8 @@ def extract_features(image_paths, label, hog):
 
 def train_and_save_svm():
     hog = get_hog_descriptor()
-    
-    # 1. Tự động lấy vị trí chính xác
     current_dir = os.path.dirname(os.path.abspath(__file__)) 
     backend_dir = os.path.dirname(current_dir) 
-    
-    # 2. Xây dựng đường dẫn tuyệt đối đến thư mục data
     occ_pattern = os.path.join(backend_dir, 'data', 'train', 'occupied', '*.jpg')
     emp_pattern = os.path.join(backend_dir, 'data', 'train', 'empty', '*.jpg')
     
@@ -69,7 +60,6 @@ def train_and_save_svm():
     features_occ, labels_occ = extract_features(occupied_paths, 1, hog)
     features_emp, labels_emp = extract_features(empty_paths, 0, hog)
     
-    # Gom dữ liệu
     X = np.array(features_occ + features_emp, dtype=np.float32)
     y = np.array(labels_occ + labels_emp, dtype=np.int32)
     
@@ -77,20 +67,16 @@ def train_and_save_svm():
         print("❌ LỖI: Đọc ảnh thất bại!")
         return
 
-    # Cấu hình và huấn luyện SVM
     svm = cv2.ml.SVM_create()
     svm.setKernel(cv2.ml.SVM_LINEAR)
     svm.setType(cv2.ml.SVM_C_SVC)
     
     print("🧠 Đang huấn luyện mô hình SVM (AutoTune siêu tham số K-Fold)...")
-    # Tự động tìm tham số C tối ưu
     svm.trainAuto(X, cv2.ml.ROW_SAMPLE, y)
     
-    # In ra tham số C tốt nhất vừa tìm được
     best_c = svm.getC()
     print(f"🔥 Tham số C tối ưu tìm được: {best_c}")
     
-    # Lưu mô hình
     models_dir = os.path.join(backend_dir, 'models')
     os.makedirs(models_dir, exist_ok=True)
     model_save_path = os.path.join(models_dir, 'svm_parking_model.xml')
