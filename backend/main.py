@@ -86,7 +86,7 @@ async def websocket_endpoint(websocket: WebSocket):
                         cap = cv2.VideoCapture(cam_data["video_path"])
                         cam_data["video_cap"] = cap
                         ret, frame = cap.read()
-                        pipeline.spot_history.clear()
+                        pipeline.spot_state.clear()
                         
                     updated_spots = pipeline.process_frame(frame, spots)
                     cam_data["spots"] = updated_spots
