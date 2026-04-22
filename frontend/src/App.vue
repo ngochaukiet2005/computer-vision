@@ -59,10 +59,41 @@
           <input v-model="activeCam.name" class="cam-name-input" placeholder="Tên khu vực..." />
           
           <div class="editor-tools" v-if="activeCam.videoUrl">
-            <button class="btn-secondary" @click="undoSpot" :disabled="activeCam.spots.length === 0">Hoàn Tác Ô Cuối</button>
-            <button class="btn-danger" @click="clearSpots" :disabled="activeCam.spots.length === 0">Xóa Tất Cả Ô</button>
-            <label class="btn-primary upload-btn">
-              Tải Video Khác
+            <div class="tool-group">
+              <div class="segmented-control">
+                <button :class="{ active: drawMode === 'single' }" @click="drawMode = 'single'" title="Vẽ từng ô thủ công">
+                  <span class="icon">🟦</span> Đơn
+                </button>
+                <button :class="{ active: drawMode === 'grid' }" @click="drawMode = 'grid'" title="Vẽ vùng rồi tự chia thành nhiều ô">
+                  <span class="icon">🔡</span> Dãy
+                </button>
+              </div>
+            </div>
+
+            <div v-if="drawMode === 'grid'" class="tool-group grid-config-panel animate-slide-in">
+              <div class="grid-inputs">
+                <div class="input-with-label">
+                  <input type="number" v-model.number="gridCols" min="1" max="50" />
+                  <label>Cột</label>
+                </div>
+                <span class="separator">×</span>
+                <div class="input-with-label">
+                  <input type="number" v-model.number="gridRows" min="1" max="10" />
+                  <label>Hàng</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <button class="btn-tool btn-secondary" @click="undoSpot" :disabled="activeCam.spots.length === 0">
+              ↩️ Hoàn Tác
+            </button>
+            <button class="btn-tool btn-danger" @click="clearSpots" :disabled="activeCam.spots.length === 0">
+              🗑️ Xóa Hết
+            </button>
+            <label class="btn-tool btn-primary upload-btn">
+              📁 Đổi Video
               <input type="file" accept="video/mp4" @change="handleVideoUpload" hidden />
             </label>
           </div>
@@ -190,6 +221,11 @@ const sysState = ref('SETUP'); // 'SETUP' or 'LIVE'
 const cameras = ref([]);
 const activeCamId = ref(null);
 const globalSpotCounter = ref(1);
+
+// --- SMART GRID STATE ---
+const drawMode = ref('single'); // 'single' or 'grid'
+const gridCols = ref(5);
+const gridRows = ref(1);
 
 // Lấy camera đang được chọn
 const activeCam = computed(() => cameras.value.find(c => c.id === activeCamId.value));
@@ -336,9 +372,38 @@ const draw = (e) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   redrawSavedSpots();
 
-  ctx.strokeStyle = '#00FF00';
+  const x = Math.min(startX, currentX);
+  const y = Math.min(startY, currentY);
+  const w = Math.abs(currentX - startX);
+  const h = Math.abs(currentY - startY);
+
+  ctx.strokeStyle = '#38bdf8';
   ctx.lineWidth = 2;
-  ctx.strokeRect(startX, startY, currentX - startX, currentY - startY);
+  ctx.strokeRect(x, y, w, h);
+
+  if (drawMode.value === 'grid' && w > 10 && h > 10) {
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+    
+    // Draw columns
+    for (let i = 1; i < gridCols.value; i++) {
+      const lineX = x + (i * (w / gridCols.value));
+      ctx.beginPath();
+      ctx.moveTo(lineX, y);
+      ctx.lineTo(lineX, y + h);
+      ctx.stroke();
+    }
+    
+    // Draw rows
+    for (let i = 1; i < gridRows.value; i++) {
+      const lineY = y + (i * (h / gridRows.value));
+      ctx.beginPath();
+      ctx.moveTo(x, lineY);
+      ctx.lineTo(x + w, lineY);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+  }
 };
 
 const stopDrawing = (e) => {
@@ -352,25 +417,53 @@ const stopDrawing = (e) => {
   const width = endX - startX;
   const height = endY - startY;
 
-  // Nếu khung đủ to, lưu lại (Đã giảm giới hạn từ 20px xuống 5px để vẽ được ô nhỏ)
+  // Nếu khung đủ to, lưu lại
   if (Math.abs(width) > 5 && Math.abs(height) > 5) {
     const scaleX_ratio = activeCam.value.vidWidth / videoPlayer.value.clientWidth;
     const scaleY_ratio = activeCam.value.vidHeight / videoPlayer.value.clientHeight;
 
-    activeCam.value.spots.push({
-      id: `K${String(globalSpotCounter.value).padStart(2, '0')}`,
-      status: "empty", // Mặc định trống
-      box: [
-        Math.round(Math.min(startX, endX) * scaleX_ratio), 
-        Math.round(Math.min(startY, endY) * scaleY_ratio), 
-        Math.round(Math.abs(width) * scaleX_ratio), 
-        Math.round(Math.abs(height) * scaleY_ratio)
-      ]
-    });
-    globalSpotCounter.value++;
+    const x = Math.min(startX, endX);
+    const y = Math.min(startY, endY);
+    const w = Math.abs(width);
+    const h = Math.abs(height);
+
+    if (drawMode.value === 'single') {
+      addSpot(x, y, w, h, scaleX_ratio, scaleY_ratio);
+    } else {
+      // Grid mode - Split into multiple spots
+      const spotW = w / gridCols.value;
+      const spotH = h / gridRows.value;
+      
+      for (let r = 0; r < gridRows.value; r++) {
+        for (let c = 0; c < gridCols.value; c++) {
+          addSpot(
+            x + (c * spotW), 
+            y + (r * spotH), 
+            spotW, 
+            spotH, 
+            scaleX_ratio, 
+            scaleY_ratio
+          );
+        }
+      }
+    }
   }
   
   redrawSavedSpots();
+};
+
+const addSpot = (x, y, w, h, scaleX, scaleY) => {
+  activeCam.value.spots.push({
+    id: `K${String(globalSpotCounter.value).padStart(2, '0')}`,
+    status: "empty", 
+    box: [
+      Math.round(x * scaleX), 
+      Math.round(y * scaleY), 
+      Math.round(w * scaleX), 
+      Math.round(h * scaleY)
+    ]
+  });
+  globalSpotCounter.value++;
 };
 
 const redrawSavedSpots = () => {
@@ -714,15 +807,114 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .editor-tools {
   display: flex;
-  gap: 15px;
+  gap: 20px;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.4);
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tool-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tool-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.segmented-control {
+  display: flex;
+  background: #0f172a;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+.segmented-control button {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 6px;
+  background: transparent;
+  color: #94a3b8;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.segmented-control button.active {
+  background: #38bdf8;
+  color: #0f172a;
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+}
+
+.grid-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0f172a;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+.input-with-label {
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
-.editor-tools button, .editor-tools label {
-  flex: 1 1 0;
-  box-sizing: border-box;
+
+.input-with-label input {
+  width: 45px;
+  background: transparent;
+  border: none;
+  color: #fff;
   text-align: center;
-  margin: 0;
-  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+}
+
+.input-with-label label {
+  font-size: 9px;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.separator {
+  color: #475569;
+  font-weight: bold;
+}
+
+.divider {
+  width: 1px;
+  height: 40px;
+  background: #334155;
+}
+
+.btn-tool {
+  padding: 8px 16px;
+  font-size: 14px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .empty-state { text-align: center; color: #94a3b8; }
