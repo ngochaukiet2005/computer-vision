@@ -27,7 +27,13 @@ env/
 
 # 2. Bỏ qua toàn bộ thư mục chứa hình ảnh dataset
 # Dataset
-backend/data/
+# Chặn mọi file ảnh trong thư mục data và các thư mục con
+backend/data/**/*.jpg
+backend/data/**/*.jpeg
+backend/data/**/*.png
+backend/data/**/*.gif
+backend/data/**/*.webp
+backend/data/**/*.svg
 
 # 3. Bỏ qua file mô hình AI (file .xml thường khá nặng)
 # Model files
