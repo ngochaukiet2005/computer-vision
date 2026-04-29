@@ -83,6 +83,13 @@ computer-vision/
 │   │   └── services/       # WebSocket client
 │   └── README.md           # Frontend documentation
 │
+├── notebooks/              # Jupyter Notebooks for research & experiments
+│   ├── 01_preprocessing_exploration.ipynb
+│   ├── 02_svm_training_analysis.ipynb
+│   ├── 03_cv_pipeline_demo.ipynb
+│   ├── 04_background_analysis.ipynb
+│   └── README.md           # Notebook documentation
+│
 ├── docs/                   # Documentation and requirements
 │   ├── srs_content.txt    # Software Requirements Specification
 │   └── pdf_content.txt    # Assignment requirements
@@ -192,6 +199,7 @@ occ_count >= 2              # Frames needed to mark occupied
 ## Documentation
 
 - [Backend Documentation](./backend/README.md) - Setup, API, configuration
+- [Notebooks Exploration](./notebooks/README.md) - Research and experiments
 - [Technical Details](./backend/TECHNICAL.md) - CV techniques explained
 - [Assignment Requirements](./docs/pdf_content.txt) - Course requirements
 - [System Specification](./docs/srs_content.txt) - Detailed SRS

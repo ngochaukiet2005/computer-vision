@@ -15,19 +15,19 @@ def extract_features(image_paths, label, hog):
         if img is not None:
             preprocessed_img = apply_preprocessing(img)
             hist = hog.compute(preprocessed_img)
-            features.append(hist)
+            features.append(hist.flatten())
             labels.append(label)
             
             flipped = cv2.flip(img, 1)
-            features.append(hog.compute(apply_preprocessing(flipped)))
+            features.append(hog.compute(apply_preprocessing(flipped)).flatten())
             labels.append(label)
             
             darker = cv2.convertScaleAbs(img, alpha=0.8, beta=-15)
-            features.append(hog.compute(apply_preprocessing(darker)))
+            features.append(hog.compute(apply_preprocessing(darker)).flatten())
             labels.append(label)
             
             brighter = cv2.convertScaleAbs(img, alpha=1.2, beta=15)
-            features.append(hog.compute(apply_preprocessing(brighter)))
+            features.append(hog.compute(apply_preprocessing(brighter)).flatten())
             labels.append(label)
         else:
             print(f"⚠️ Cảnh báo: Không thể đọc được ảnh {path}")
