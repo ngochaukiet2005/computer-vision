@@ -1,6 +1,6 @@
 import numpy as np
 
-def is_flat_background(gray_image, variance_threshold=150):
+def is_flat_background(gray_image, variance_threshold=1900):
     """
     Kỹ thuật Chương 4: Phân đoạn ảnh / Phân tích nền
     Nhựa đường trống thường có phương sai cường độ pixel rất thấp do màu sắc đồng nhất.
